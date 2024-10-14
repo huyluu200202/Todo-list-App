@@ -6,6 +6,11 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### `npm install`
+
+Installs all the dependencies required for the project.  
+Make sure to run this command before starting the project for the first time.
+
 ### `npm start`
 
 Runs the app in development mode.  
@@ -25,13 +30,12 @@ It optimizes the build for the best performance. Your app will be ready to be de
     ```bash
     cd backend
     ```
-3. Start the server:
+3. Install dependencies:
+    ```bash
+    npm install
+    ```
+4. Start the server:
     ```bash
     node server.js
     ```
-4. The backend server will run on [http://localhost:4001](http://localhost:4001).
 
-## Learn More
-
-- [Create React App Documentation](https://facebook.github.io/create-react-app/docs/getting-started)
-- [React Documentation](https://reactjs.org/)
