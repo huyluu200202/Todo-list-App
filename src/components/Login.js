@@ -6,6 +6,13 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
 
+    const handleError = (error) => {
+        if (error.response) {
+            return error.response.data.message || 'An error occurred!';
+        }
+        return 'Server error! Please try again later.';
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -15,7 +22,7 @@ const Login = () => {
             localStorage.setItem('username', username); 
             window.location.href = '/'; 
         } catch (error) {
-            setMessage(error.response.data.message || 'Login failed!');
+            setMessage(handleError(error));
         }
     };
 

@@ -10,7 +10,7 @@ const Register = () => {
         if (error.response) {
             return error.response.data.message || 'An error occurred!';
         }
-        return 'Network error! Please try again later.';
+        return 'Server error! Please try again later.';
     };
 
     const handleSubmit = async (e) => {

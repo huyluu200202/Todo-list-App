@@ -38,6 +38,11 @@ function ItemList() {
             return;
         }
 
+        if (name.trim() === '') {
+            alert('Item name is required');
+            return;
+        }
+
         try {
             if (editId) {
                 await axios.put(`http://localhost:4001/api/items/${editId}`, { name }, {
@@ -138,7 +143,7 @@ function ItemList() {
             <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Add Item"
+                placeholder="Item name"
             />
             <button onClick={handleAddItem}>{editId ? 'Update' : 'Add'}</button>
             <input
