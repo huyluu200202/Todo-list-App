@@ -19,4 +19,6 @@ db.connect();
 app.use('/api', usersController); 
 app.use('/api', itemsController); 
 
+app.use('/uploads', express.static('uploads'));
+
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

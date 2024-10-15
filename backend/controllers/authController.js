@@ -1,3 +1,4 @@
+const multer = require('multer');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -6,7 +7,17 @@ const User = require('../models/User');
 const router = express.Router();
 const SECRET_KEY = 'my_secret';
 
-// Đăng ký
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); 
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+
+const upload = multer({ storage: storage });
+
 router.post('/register', async (req, res) => {
     const { username, password } = req.body;
 
@@ -16,7 +27,7 @@ router.post('/register', async (req, res) => {
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ username, password: hashedPassword });
+        const user = new User({ username, password: hashedPassword }); 
         const savedUser = await user.save();
         res.status(201).json(savedUser);
     } catch (error) {
@@ -28,7 +39,6 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// Đăng nhập
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -39,8 +49,34 @@ router.post('/login', async (req, res) => {
         if (!isValidPassword) return res.status(400).json({ message: 'Invalid password' });
 
         const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: '1h' });
-        res.json({ token, userId: user._id });  
+        res.json({ token, userId: user._id, avatar: user.avatar }); 
     } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+router.post('/upload-avatar', upload.single('avatar'), async (req, res) => {
+    const { userId } = req.body;
+
+    if (!userId) {
+        return res.status(400).json({ message: 'User ID is missing!' });
+    }
+
+    if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded!' });
+    }
+
+    try {
+        const avatarUrl = `http://localhost:4001/${req.file.path.replace(/\\/g, '/')}`; 
+        const user = await User.findByIdAndUpdate(userId, { avatar: avatarUrl }, { new: true });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({ avatar: avatarUrl });
+    } catch (error) {
+        console.error('Error during avatar upload:', error);
         res.status(500).json({ message: error.message });
     }
 });

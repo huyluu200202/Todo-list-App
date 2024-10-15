@@ -13,8 +13,24 @@ const Register = () => {
         return 'Server error! Please try again later.';
     };
 
+    const validateInput = () => {
+        if (username.length < 3 || username.length > 15) {
+            return "Username must be between 3 and 15 characters long.";
+        }
+        if (password.length < 6 || password.length > 30) {
+            return "Password must be between 6 and 30 characters long.";
+        }
+        return null; 
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const validationError = validateInput();
+        if (validationError) {
+            setMessage(validationError);
+            return;
+        }
 
         try {
             await axios.post('http://localhost:4001/api/register', {

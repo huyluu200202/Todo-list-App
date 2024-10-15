@@ -18,14 +18,17 @@ const Login = () => {
         try {
             const response = await axios.post('http://localhost:4001/api/login', { username, password });
             setMessage('Login successful!');
+    
             localStorage.setItem('token', response.data.token);
-            localStorage.setItem('username', username); 
+            localStorage.setItem('username', username);
+            localStorage.setItem('userId', response.data.userId); 
+            localStorage.setItem('avatar', response.data.avatar || 'http://localhost:4001/uploads/default-avatar.jpg');
             window.location.href = '/'; 
         } catch (error) {
             setMessage(handleError(error));
         }
     };
-
+    
     return (
         <div>
             <h2>Login</h2>
