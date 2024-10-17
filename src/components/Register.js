@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const Register = () => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
 
@@ -14,9 +14,11 @@ const Register = () => {
     };
 
     const validateInput = () => {
-        if (username.length < 3 || username.length > 15) {
-            return "Username must be between 3 and 15 characters long.";
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{3,}$/; 
+        if (!emailRegex.test(email)) {
+            return "Please enter a valid email address.";
         }
+        
         if (password.length < 6 || password.length > 30) {
             return "Password must be between 6 and 30 characters long.";
         }
@@ -34,11 +36,11 @@ const Register = () => {
 
         try {
             await axios.post('http://localhost:4001/api/register', {
-                username,
+                email,
                 password,
             });
             setMessage('Registration successful! You can now login.');
-            setUsername('');
+            setEmail('');
             setPassword('');
             window.location.href = '/login';
         } catch (error) {
@@ -51,10 +53,10 @@ const Register = () => {
             <h2>Register</h2>
             <form onSubmit={handleSubmit}>
                 <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Username"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
                     required
                 />
                 <br />

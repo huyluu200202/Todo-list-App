@@ -3,11 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
     const navigate = useNavigate();
-    const username = localStorage.getItem('username');
+    const email = localStorage.getItem('email');
     const [avatar, setAvatar] = useState(localStorage.getItem('avatar') || 'http://localhost:4001/uploads/default-avatar.jpg');
+    const [dropDown, setDropdown] = useState(false);
+
     const handleLogout = () => {
         localStorage.removeItem('token');
-        localStorage.removeItem('username');
+        localStorage.removeItem('email');
         localStorage.removeItem('userId');
         localStorage.removeItem('avatar');
         navigate('/login', { replace: true });
@@ -33,8 +35,8 @@ const Header = () => {
             .then(response => response.json())
             .then(data => {
                 if (data.avatar) {
-                    localStorage.setItem('avatar', data.avatar); 
-                    setAvatar(data.avatar); 
+                    localStorage.setItem('avatar', data.avatar);
+                    setAvatar(data.avatar);
                 } else {
                     console.error('Error:', data.message);
                 }
@@ -42,11 +44,15 @@ const Header = () => {
             .catch(error => console.error('Error uploading avatar:', error));
     };
 
+    const toggleDropdown = () => {
+        setDropdown(!dropDown);
+    };
+
     return (
         <nav>
             <h1>To-Do List App</h1>
             <div>
-                {username ? (
+                {email ? (
                     <>
                         <img
                             src={avatar}
@@ -61,8 +67,28 @@ const Header = () => {
                             accept="image/*"
                             onChange={handleAvatarChange}
                         />
-                        <span style={{ marginRight: '10px' }}>Hello, {username}</span>
-                        <button onClick={handleLogout}>Logout</button>
+                        <span
+                            style={{ marginRight: '10px', cursor: 'pointer' }}
+                            onClick={toggleDropdown}
+                        >
+                            Hello, {email.split('@gmail.com')}
+                        </span>
+                        {dropDown && (
+                            <div style={{
+                                position: 'absolute',
+                                top: '60px', 
+                                right: '10px', 
+                                padding: '10px',
+                                zIndex: 1
+                            }}>
+                                <button
+                                    onClick={() => navigate('/change-password')}
+                                    style={{ display: 'block', margin: '5px 0' }}>
+                                    Change Password
+                                </button>
+                                <button onClick={handleLogout} style={{ display: 'block', margin: '5px 0' }}>Logout</button>
+                            </div>
+                        )}
                     </>
                 ) : (
                     <>
