@@ -30,11 +30,7 @@ It optimizes the build for the best performance. Your app will be ready to be de
     ```bash
     cd backend
     ```
-3. Install dependencies:
-    ```bash
-    npm install
-    ```
-4. Start the server:
+3. Start the server:
     ```bash
     node server.js
     ```
